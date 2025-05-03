@@ -32,6 +32,10 @@ import ListFood from "./pages/food/ListFood.jsx";
 import AddFood from "./pages/food/AddFood.jsx";
 import DetailFood from "./pages/food/DetailFood.jsx";
 import EditFood from "./pages/food/EditFood.jsx";
+import LocationList from "./pages/location/LocationList.jsx";
+import AddLocation from "./pages/location/AddLocation.jsx";
+import EditLocation from "./pages/location/EditLocation.jsx";
+import LocationDetail from "./pages/location/LocationDetail.jsx";
 
 const App = () => {
     const { isAuthenticated, loading } = useAuth();
@@ -114,6 +118,7 @@ const App = () => {
                     element={isAuthenticated ? <TourDetail /> : <Navigate to="/signin" />}
                 />
 
+                {/* Food Routes */}
                 <Route
                     path="/food"
                     element={isAuthenticated ? <ListFood /> : <Navigate to="/signin" />}
@@ -129,6 +134,24 @@ const App = () => {
                 <Route
                     path="/food/edit/:id"
                     element={isAuthenticated ? <EditFood /> : <Navigate to="/signin" />}
+                />
+
+                {/* Location Routes */}
+                <Route
+                    path="/location"
+                    element={isAuthenticated ? <LocationList /> : <Navigate to="/signin" />}
+                />
+                <Route
+                    path="/location/add"
+                    element={isAuthenticated ? <AddLocation /> : <Navigate to="/signin" />}
+                />
+                <Route
+                    path="/location/:id"
+                    element={isAuthenticated ? <LocationDetail /> : <Navigate to="/signin" />}
+                />
+                <Route
+                    path="/location/edit/:id"
+                    element={isAuthenticated ? <EditLocation /> : <Navigate to="/signin" />}
                 />
             </Route>
 

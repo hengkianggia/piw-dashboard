@@ -195,3 +195,67 @@ export const mockFoods = [
         image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
     },
 ];
+
+// Mock locations data
+export const mockLocations = [
+    {
+        id: "1",
+        title: "Sunny Beach",
+        description: "A beautiful sunny beach with golden sand and clear waters.",
+        image: "https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "2",
+        title: "Mountain Retreat",
+        description: "A peaceful mountain retreat surrounded by nature.",
+        image: "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "3",
+        title: "City Skyline",
+        description: "A vibrant city skyline with modern architecture.",
+        image: "https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "4",
+        title: "Forest Trail",
+        description: "A scenic forest trail perfect for hiking and nature walks.",
+        image: "https://images.pexels.com/photos/4827/nature-forest-industry-rails.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "5",
+        title: "Desert Dunes",
+        description: "Expansive desert dunes with stunning sunset views.",
+        image: "https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "6",
+        title: "Lakeside Cabin",
+        description: "A cozy cabin by the lake surrounded by trees.",
+        image: "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "7",
+        title: "Historic Castle",
+        description: "An ancient castle with rich history and stunning views.",
+        image: "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "8",
+        title: "Tropical Paradise",
+        description: "A tropical paradise with palm trees and crystal-clear water.",
+        image: "https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "9",
+        title: "Snowy Mountains",
+        description: "Snow-covered mountains perfect for winter sports.",
+        image: "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+    {
+        id: "10",
+        title: "Countryside Farm",
+        description: "A charming countryside farm with rolling hills.",
+        image: "https://images.pexels.com/photos/4827/nature-forest-industry-rails.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    },
+];

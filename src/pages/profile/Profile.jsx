@@ -6,8 +6,6 @@ import {
   Grid,
   TextField,
   Button,
-  Avatar,
-  IconButton,
   CircularProgress,
   Alert,
 } from "@mui/material";
@@ -24,8 +22,6 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
-    avatar: user?.email || "",
-    bio: user?.name || "",
   });
 
   const handleChange = (e) => {
@@ -76,28 +72,6 @@ const Profile = () => {
 
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} display="flex" justifyContent="center">
-              <Box sx={{ position: "relative" }}>
-                <Avatar
-                  src={formData.avatar}
-                  sx={{ width: 120, height: 120 }}
-                />
-                {editing && (
-                  <IconButton
-                    sx={{
-                      position: "absolute",
-                      bottom: 0,
-                      right: 0,
-                      bgcolor: "primary.main",
-                      "&:hover": { bgcolor: "primary.dark" },
-                    }}
-                  >
-                    <EditIcon sx={{ color: "white" }} />
-                  </IconButton>
-                )}
-              </Box>
-            </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
@@ -118,19 +92,6 @@ const Profile = () => {
                 onChange={handleChange}
                 disabled={!editing}
                 type="email"
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Bio"
-                name="bio"
-                value={formData.bio}
-                onChange={handleChange}
-                disabled={!editing}
-                multiline
-                rows={4}
               />
             </Grid>
 

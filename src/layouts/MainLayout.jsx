@@ -148,6 +148,13 @@ const MainLayout = () => {
                     </ListItemIcon>
                     <ListItemText primary="Kuliner" />
                 </ListItemButton>
+
+                <ListItemButton onClick={() => navigate("/location")}>
+                    <ListItemIcon>
+                        <FoodBank />
+                    </ListItemIcon>
+                    <ListItemText primary="Location" />
+                </ListItemButton>
             </List>
         </>
     );
