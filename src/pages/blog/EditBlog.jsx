@@ -11,12 +11,11 @@ import {
     Alert,
 } from "@mui/material";
 import { Save as SaveIcon, ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-import { mockBlogs } from "../../utils/mockData";
 
 const EditBlog = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
@@ -27,13 +26,25 @@ const EditBlog = () => {
     const [imagePreview, setImagePreview] = useState("");
 
     useEffect(() => {
-        // Fetch blog data
-        const blog = mockBlogs.find((blog) => blog.id === id);
-        if (blog) {
-            setTitle(blog.title);
-            setDescription(blog.excerpt);
-            setImagePreview(blog.coverImage);
-        }
+        const fetchBlog = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`http://localhost:5555/berita/${id}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch blog: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setTitle(data?.data?.name || "");
+                setDescription(data?.data?.content || "");
+                setImagePreview(`http://localhost:5555/upload/${data.image}`);
+            } catch (err) {
+                setError(err.message || "Failed to fetch blog");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBlog();
     }, [id]);
 
     // Handle image file change
@@ -59,27 +70,60 @@ const EditBlog = () => {
         setSuccess("");
 
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500));
+            const formData = new FormData();
+            formData.append("name", title);
+            formData.append("content", description);
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+
+            const response = await fetch(`http://localhost:5555/berita/${id}`, {
+                method: "PUT",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update blog: ${response.statusText}`);
+            }
+
             setSuccess("Blog updated successfully");
             setTimeout(() => navigate("/blogs"), 1000);
         } catch (err) {
-            setError("Failed to update blog");
+            setError(err.message || "Failed to update blog");
         } finally {
             setLoading(false);
         }
     };
 
+    if (loading) {
+        return (
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "400px" }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box>
+                <Alert severity="error" sx={{ mb: 2 }}>
+                    {error}
+                </Alert>
+                <Button
+                    variant="outlined"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate("/blogs")}
+                    sx={{ mt: 2 }}
+                >
+                    Back to Blogs
+                </Button>
+            </Box>
+        );
+    }
+
     return (
         <Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 3,
-                }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Edit Blog
                 </Typography>
@@ -93,11 +137,6 @@ const EditBlog = () => {
             </Box>
 
             <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-                {error && (
-                    <Alert severity="error" sx={{ mb: 2 }}>
-                        {error}
-                    </Alert>
-                )}
                 {success && (
                     <Alert severity="success" sx={{ mb: 2 }}>
                         {success}
@@ -133,29 +172,20 @@ const EditBlog = () => {
                         <Grid
                             item
                             xs={12}
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 30,
-                            }}
+                            style={{ display: "flex", flexDirection: "column", gap: 30 }}
                         >
                             {imagePreview && (
                                 <Box
                                     component="img"
                                     src={imagePreview}
                                     alt="Image Preview"
-                                    sx={{
-                                        mt: 2,
-                                        maxWidth: "50%",
-                                    }}
+                                    sx={{ mt: 2, maxWidth: "50%" }}
                                 />
                             )}
                             <Button
                                 variant="contained"
                                 component="label"
-                                style={{
-                                    width: "fit-content",
-                                }}
+                                style={{ width: "fit-content" }}
                             >
                                 Upload Image
                                 <input

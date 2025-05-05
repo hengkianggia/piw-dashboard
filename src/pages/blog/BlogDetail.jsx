@@ -12,24 +12,32 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { mockBlogs } from "../../utils/mockData";
 
 const BlogDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simulate API call
-        setLoading(true);
-        setTimeout(() => {
-            const foundBlog = mockBlogs.find((blog) => blog.id === id);
-            if (foundBlog) {
-                setBlog(foundBlog);
+        const fetchBlog = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`http://localhost:5555/berita/${id}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch blog: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setBlog(data?.data || data);
+            } catch (err) {
+                setError(err.message || "Failed to fetch blog");
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        }, 800);
+        };
+
+        fetchBlog();
     }, [id]);
 
     const handleDelete = () => {
@@ -52,6 +60,24 @@ const BlogDetail = () => {
                 }}
             >
                 <CircularProgress />
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box>
+                <Typography variant="h5" color="error">
+                    {error}
+                </Typography>
+                <Button
+                    variant="outlined"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate("/blogs")}
+                    sx={{ mt: 2 }}
+                >
+                    Back to Blogs
+                </Button>
             </Box>
         );
     }
@@ -120,7 +146,7 @@ const BlogDetail = () => {
                 <Box
                     sx={{
                         height: 300,
-                        backgroundImage: `url(${blog.coverImage})`,
+                        backgroundImage: `url(http://localhost:5555/upload/${blog.image})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                     }}
@@ -128,10 +154,10 @@ const BlogDetail = () => {
 
                 <Box sx={{ p: 4 }}>
                     <Typography variant="h5" gutterBottom>
-                        {blog.title}
+                        {blog.name}
                     </Typography>
                     <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
-                        {blog.excerpt}
+                        {blog.content}
                     </Typography>
                 </Box>
             </Paper>
