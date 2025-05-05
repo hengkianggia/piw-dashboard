@@ -6,6 +6,7 @@ import { Save as SaveIcon, ArrowBack as ArrowBackIcon } from "@mui/icons-materia
 const AddBlog = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     // Form state
     const [title, setTitle] = useState("");
@@ -27,17 +28,39 @@ const AddBlog = () => {
         e.preventDefault();
 
         if (!title || !description || !imageFile) {
-            alert("Please fill out all required fields");
+            setError("Please fill out all required fields");
             return;
         }
 
         setLoading(true);
+        setError("");
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        try {
+            // Prepare form data
+            const formData = new FormData();
+            formData.append("name", title);
+            formData.append("content", description);
+            formData.append("image", imageFile);
 
-        setLoading(false);
-        navigate("/blogs");
+            // Send POST request to API
+            const response = await fetch("http://localhost:5555/berita/", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to submit: ${response.statusText}`);
+            }
+
+            // Optionally handle response data
+            // const data = await response.json();
+
+            setLoading(false);
+            navigate("/blogs");
+        } catch (err) {
+            setLoading(false);
+            setError(err.message || "Failed to submit blog");
+        }
     };
 
     return (
@@ -63,6 +86,11 @@ const AddBlog = () => {
             </Box>
 
             <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
+                {error && (
+                    <Typography color="error" sx={{ mb: 2 }}>
+                        {error}
+                    </Typography>
+                )}
                 <Box component="form" onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
