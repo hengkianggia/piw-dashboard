@@ -40,12 +40,19 @@ const BlogDetail = () => {
         fetchBlog();
     }, [id]);
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (window.confirm("Are you sure you want to delete this blog post?")) {
-            // Simulate deletion
-            setTimeout(() => {
+            try {
+                const response = await fetch(`http://localhost:5555/berita/${id}`, {
+                    method: "DELETE",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to delete blog: ${response.statusText}`);
+                }
                 navigate("/blogs");
-            }, 500);
+            } catch (error) {
+                alert(error.message || "Failed to delete blog");
+            }
         }
     };
 

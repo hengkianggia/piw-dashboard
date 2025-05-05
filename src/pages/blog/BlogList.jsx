@@ -43,10 +43,19 @@ const BlogList = () => {
         fetchBlogs();
     }, []);
 
-    // Delete blog (mock)
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this blog post?")) {
-            setBlogs(blogs.filter((blog) => blog.id !== id));
+            try {
+                const response = await fetch(`http://localhost:5555/berita/${id}`, {
+                    method: "DELETE",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to delete blog: ${response.statusText}`);
+                }
+                setBlogs(blogs.filter((blog) => blog.id !== id));
+            } catch (error) {
+                alert(error.message || "Failed to delete blog");
+            }
         }
     };
 
