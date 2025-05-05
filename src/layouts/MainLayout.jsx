@@ -32,6 +32,7 @@ import {
 } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 import { FoodBank } from "@mui/icons-material";
+import { LocationOn } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -151,7 +152,7 @@ const MainLayout = () => {
 
                 <ListItemButton onClick={() => navigate("/location")}>
                     <ListItemIcon>
-                        <FoodBank />
+                        <LocationOn />
                     </ListItemIcon>
                     <ListItemText primary="Location" />
                 </ListItemButton>
