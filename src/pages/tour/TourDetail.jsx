@@ -22,25 +22,44 @@ const TourDetail = () => {
     const navigate = useNavigate();
     const [tour, setTour] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simulate API call
-        setLoading(true);
-        setTimeout(() => {
-            const foundTour = mockTours.find((tour) => tour.id === id);
-            if (foundTour) {
-                setTour(foundTour);
+        const fetchTour = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`http://localhost:5555/rekreasi/${id}`, {
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch blog: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setTour(data?.data || data);
+            } catch (err) {
+                setError(err.message || "Failed to fetch blog");
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        }, 800);
+        };
+
+        fetchTour();
     }, [id]);
 
-    const handleDelete = () => {
-        if (window.confirm("Are you sure you want to delete this tour?")) {
-            // Simulate deletion
-            setTimeout(() => {
+    const handleDelete = async () => {
+        if (window.confirm("Are you sure you want to delete this blog post?")) {
+            try {
+                const response = await fetch(`http://localhost:5555/rekreasi/${id}`, {
+                    method: "DELETE",
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to delete tour: ${response.statusText}`);
+                }
                 navigate("/tours");
-            }, 500);
+            } catch (error) {
+                setError(err.message || "Failed to delete tour");
+            }
         }
     };
 
@@ -55,6 +74,24 @@ const TourDetail = () => {
                 }}
             >
                 <CircularProgress />
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box>
+                <Typography variant="h5" color="error">
+                    {error}
+                </Typography>
+                <Button
+                    variant="outlined"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate("/blogs")}
+                    sx={{ mt: 2 }}
+                >
+                    Back to Blogs
+                </Button>
             </Box>
         );
     }
@@ -140,9 +177,10 @@ const TourDetail = () => {
                         Price: ${tour.price}
                     </Typography>
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-                        {tour.tags && tour.tags.map((tag) => (
-                            <Chip key={tag} label={tag} color="primary" variant="outlined" />
-                        ))}
+                        {tour.tags &&
+                            tour.tags.map((tag) => (
+                                <Chip key={tag} label={tag} color="primary" variant="outlined" />
+                            ))}
                     </Box>
                     <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
                         {tour.description}

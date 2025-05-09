@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-    Box,
-    Typography,
-    Paper,
-    Button,
-    CircularProgress,
-} from "@mui/material";
+import { Box, Typography, Paper, Button, CircularProgress } from "@mui/material";
 import {
     ArrowBack as ArrowBackIcon,
     Edit as EditIcon,
@@ -24,7 +18,9 @@ const BlogDetail = () => {
         const fetchBlog = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:5555/berita/${id}`);
+                const response = await fetch(`http://localhost:5555/berita/${id}`, {
+                    credentials: "include",
+                });
                 if (!response.ok) {
                     throw new Error(`Failed to fetch blog: ${response.statusText}`);
                 }
@@ -45,13 +41,14 @@ const BlogDetail = () => {
             try {
                 const response = await fetch(`http://localhost:5555/berita/${id}`, {
                     method: "DELETE",
+                    credentials: "include",
                 });
                 if (!response.ok) {
                     throw new Error(`Failed to delete blog: ${response.statusText}`);
                 }
                 navigate("/blogs");
             } catch (error) {
-                alert(error.message || "Failed to delete blog");
+                setError(err.message || "Failed to delete blog");
             }
         }
     };
@@ -134,11 +131,7 @@ const BlogDetail = () => {
                         sx={{ cursor: "pointer", mr: 1 }}
                         onClick={() => navigate(`/blogs/edit/${blog.id}`)}
                     />
-                    <DeleteIcon
-                        color="error"
-                        sx={{ cursor: "pointer" }}
-                        onClick={handleDelete}
-                    />
+                    <DeleteIcon color="error" sx={{ cursor: "pointer" }} onClick={handleDelete} />
                 </Box>
             </Box>
 

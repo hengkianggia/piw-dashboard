@@ -11,11 +11,7 @@ import {
     Alert,
     Chip,
 } from "@mui/material";
-import {
-    Save as SaveIcon,
-    ArrowBack as ArrowBackIcon,
-    Add as AddIcon,
-} from "@mui/icons-material";
+import { Save as SaveIcon, ArrowBack as ArrowBackIcon, Add as AddIcon } from "@mui/icons-material";
 import { mockTours } from "../../utils/mockData";
 
 const EditTour = () => {
@@ -36,14 +32,29 @@ const EditTour = () => {
 
     useEffect(() => {
         // Fetch tour data
-        const tour = mockTours.find((tour) => tour.id === id);
-        if (tour) {
-            setTitle(tour.title);
-            setPrice(tour.price);
-            setTags(tour.tags || []);
-            setImagePreview(tour.image);
-            setContent(tour.description);
-        }
+        const fetchTour = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`http://localhost:5555/rekreasi/${id}`, {
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch blog: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setTitle(data?.data?.name || "");
+                setPrice(data?.data?.harga || "");
+                setDescription(data?.data?.content || "");
+                setTagInput(data?.data?.tag || "");
+                setImagePreview(`http://localhost:5555/upload/${data.image}`);
+            } catch (err) {
+                setError(err.message || "Failed to fetch blog");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTour();
     }, [id]);
 
     // Handle tag addition

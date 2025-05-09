@@ -35,11 +35,29 @@ const AddFood = () => {
 
         setLoading(true);
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        try {
+            const formData = new FormData();
+            formData.append("name", title);
+            formData.append("harga", price);
+            formData.append("content", description);
+            formData.append("image", imageFile);
 
-        setLoading(false);
-        navigate("/food");
+            const response = await fetch("http://localhost:5555/kuliner", {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to add food");
+            }
+
+            navigate("/food");
+        } catch (error) {
+            alert(error.message || "Failed to add food");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

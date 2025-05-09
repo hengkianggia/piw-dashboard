@@ -46,6 +46,7 @@ const AddBlog = () => {
             const response = await fetch("http://localhost:5555/berita/", {
                 method: "POST",
                 body: formData,
+                credentials: "include",
             });
 
             if (!response.ok) {

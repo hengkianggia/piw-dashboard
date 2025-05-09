@@ -29,7 +29,9 @@ const EditBlog = () => {
         const fetchBlog = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:5555/berita/${id}`);
+                const response = await fetch(`http://localhost:5555/berita/${id}`, {
+                    credentials: "include",
+                });
                 if (!response.ok) {
                     throw new Error(`Failed to fetch blog: ${response.statusText}`);
                 }
@@ -80,6 +82,7 @@ const EditBlog = () => {
             const response = await fetch(`http://localhost:5555/berita/${id}`, {
                 method: "PUT",
                 body: formData,
+                credentials: "include",
             });
 
             if (!response.ok) {
@@ -97,7 +100,14 @@ const EditBlog = () => {
 
     if (loading) {
         return (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "400px" }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "400px",
+                }}
+            >
                 <CircularProgress />
             </Box>
         );
@@ -123,7 +133,14 @@ const EditBlog = () => {
 
     return (
         <Box>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 3,
+                }}
+            >
                 <Typography variant="h4" component="h1" gutterBottom>
                     Edit Blog
                 </Typography>

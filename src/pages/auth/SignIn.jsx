@@ -12,9 +12,11 @@ import {
     CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useAuth } from "../../contexts/AuthContext";
 
 const SignIn = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -28,24 +30,10 @@ const SignIn = () => {
         setLoading(true);
 
         try {
-            const response = await fetch("http://localhost:5555/user/signin", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to sign in");
-            }
-
-            // Optionally handle response data
-            // const data = await response.json();
-
+            await login(email, password);
             navigate("/dashboard");
         } catch (err) {
-            setError(err.message || "Invalid email or password");
+            setError("Invalid email or password");
         } finally {
             setLoading(false);
         }

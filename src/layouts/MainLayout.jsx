@@ -55,8 +55,16 @@ const MainLayout = () => {
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         handleMenuClose();
+        try {
+            await fetch("http://localhost:5555/user/signout", {
+                method: "GET",
+                credentials: "include",
+            });
+        } catch (error) {
+            console.error("Error during signout:", error);
+        }
         logout();
         navigate("/signin");
     };

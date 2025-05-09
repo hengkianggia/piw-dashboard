@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
     Typography,
@@ -9,6 +9,7 @@ import {
     IconButton,
     Tooltip,
     Paper,
+    CircularProgress,
 } from "@mui/material";
 import {
     Add as AddIcon,
@@ -17,11 +18,33 @@ import {
     Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { mockFoods } from "../../utils/mockData";
 
 const ListFood = () => {
     const navigate = useNavigate();
-    const [foods, setFoods] = useState(mockFoods);
+    const [foods, setFoods] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchFoods = async () => {
+            try {
+                const response = await fetch("http://localhost:5555/kuliner/", {
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch blogs: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setFoods(data?.data);
+            } catch (err) {
+                setError(err.message || "Failed to fetch blogs");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFoods();
+    }, []);
 
     // Delete food (mock)
     const handleDelete = (id) => {
@@ -29,6 +52,22 @@ const ListFood = () => {
             setFoods(foods.filter((food) => food.id !== id));
         }
     };
+
+    if (loading) {
+        return (
+            <Box sx={{ textAlign: "center", mt: 4 }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box sx={{ textAlign: "center", mt: 4 }}>
+                <Typography color="error">{error}</Typography>
+            </Box>
+        );
+    }
 
     return (
         <Box>

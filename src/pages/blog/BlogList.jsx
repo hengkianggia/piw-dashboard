@@ -14,6 +14,7 @@ import {
     Visibility as VisibilityIcon,
     Edit as EditIcon,
     Delete as DeleteIcon,
+    ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +28,9 @@ const BlogList = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await fetch("http://localhost:5555/berita/");
+                const response = await fetch("http://localhost:5555/berita/", {
+                    credentials: "include",
+                });
                 if (!response.ok) {
                     throw new Error(`Failed to fetch blogs: ${response.statusText}`);
                 }
@@ -48,6 +51,7 @@ const BlogList = () => {
             try {
                 const response = await fetch(`http://localhost:5555/berita/${id}`, {
                     method: "DELETE",
+                    credentials: "include",
                 });
                 if (!response.ok) {
                     throw new Error(`Failed to delete blog: ${response.statusText}`);
@@ -111,7 +115,7 @@ const BlogList = () => {
                                                 sx={{
                                                     height: "100%",
                                                     minHeight: 200,
-                                                    backgroundImage: `url(http://localhost:5555/upload/${blog.image})`,
+                                                    backgroundImage: `url(http://localhost:5555/uploads/${blog.image})`,
                                                     backgroundSize: "cover",
                                                     backgroundPosition: "center",
                                                 }}

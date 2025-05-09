@@ -1,43 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    Box,
-    Typography,
-    TextField,
-    Button,
-    Grid,
-    Paper,
-    CircularProgress,
-    Chip,
-} from "@mui/material";
-import { Save as SaveIcon, ArrowBack as ArrowBackIcon, Add as AddIcon } from "@mui/icons-material";
+import { Box, Typography, TextField, Button, Grid, Paper, CircularProgress } from "@mui/material";
+import { Save as SaveIcon, ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 
 const AddTour = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     // Form state
     const [title, setTitle] = useState("");
     const [price, setPrice] = useState("");
-    const [tags, setTags] = useState([]);
-    const [tagInput, setTagInput] = useState("");
+    const [tag, setTag] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState("");
     const [content, setContent] = useState("");
-
-    // Handle tag addition
-    const handleAddTag = () => {
-        const newTag = tagInput.trim();
-        if (newTag && !tags.includes(newTag)) {
-            setTags([...tags, newTag]);
-            setTagInput("");
-        }
-    };
-
-    // Handle tag deletion
-    const handleDeleteTag = (tagToDelete) => {
-        setTags(tags.filter((tag) => tag !== tagToDelete));
-    };
 
     // Handle image file change
     const handleImageChange = (e) => {
@@ -52,18 +29,40 @@ const AddTour = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!title || !price || tags.length === 0 || !imageFile || !content) {
-            alert("Please fill out all required fields");
+        if (!title || !price || !tag || !imageFile || !content) {
+            setError("Please fill out all required fields");
             return;
         }
 
         setLoading(true);
+        setError("");
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        try {
+            const formData = new FormData();
+            formData.append("name", title);
+            formData.append("harga", price);
+            formData.append("content", content);
+            formData.append("image", imageFile);
+            formData.append("tag", tag);
 
-        setLoading(false);
-        navigate("/tours");
+            const response = await fetch("http://localhost:5555/rekreasi/create", {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                alert(err.message || "Failed to submit blog");
+                throw new Error(`Failed to create tour: ${response.statusText}`);
+            }
+
+            navigate("/tours");
+        } catch (error) {
+            setError(err.message || "Failed to submit blog");
+            alert(err.message || "Failed to submit blog");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -89,6 +88,11 @@ const AddTour = () => {
             </Box>
 
             <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
+                {error && (
+                    <Typography color="error" sx={{ mb: 2 }}>
+                        {error}
+                    </Typography>
+                )}
                 <Box component="form" onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
@@ -117,38 +121,13 @@ const AddTour = () => {
 
                         <Grid item xs={12}>
                             <TextField
+                                required
                                 fullWidth
-                                label="Add Tag"
-                                value={tagInput}
-                                onChange={(e) => setTagInput(e.target.value)}
-                                onKeyPress={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.preventDefault();
-                                        handleAddTag();
-                                    }
-                                }}
+                                label="Tag"
+                                value={tag}
+                                onChange={(e) => setTag(e.target.value)}
                                 variant="outlined"
-                                InputProps={{
-                                    endAdornment: (
-                                        <Button onClick={handleAddTag} startIcon={<AddIcon />}>
-                                            Add
-                                        </Button>
-                                    ),
-                                }}
-                                helperText="Press Enter or click Add to add a tag"
                             />
-                            <Box sx={{ display: "flex", flexWrap: "wrap", mt: 1 }}>
-                                {tags.map((tag) => (
-                                    <Chip
-                                        key={tag}
-                                        label={tag}
-                                        onDelete={() => handleDeleteTag(tag)}
-                                        color="primary"
-                                        variant="outlined"
-                                        sx={{ mr: 0.5, mb: 0.5 }}
-                                    />
-                                ))}
-                            </Box>
                         </Grid>
 
                         <Grid item xs={12}>
