@@ -34,12 +34,12 @@ const TourList = () => {
                     credentials: "include",
                 });
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch blogs: ${response.statusText}`);
+                    throw new Error(`Failed to fetch rekreasi: ${response.statusText}`);
                 }
                 const data = await response.json();
                 setTours(data?.data);
             } catch (err) {
-                setError(err.message || "Failed to fetch blogs");
+                setError(err.message || "Failed to fetch rekerasi");
             } finally {
                 setLoading(false);
             }
@@ -49,7 +49,7 @@ const TourList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this tour?")) {
+        if (window.confirm("Are you sure you want to delete this rekreasi?")) {
             try {
                 const response = await fetch(`http://localhost:5555/rekreasi/${id}`, {
                     method: "DELETE",

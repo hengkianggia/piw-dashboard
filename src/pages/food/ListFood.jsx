@@ -37,7 +37,7 @@ const ListFood = () => {
                 const data = await response.json();
                 setFoods(data?.data);
             } catch (err) {
-                setError(err.message || "Failed to fetch blogs");
+                setError(err.message || "Failed to fetch kuliner");
             } finally {
                 setLoading(false);
             }
@@ -47,9 +47,20 @@ const ListFood = () => {
     }, []);
 
     // Delete food (mock)
-    const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this food item?")) {
-            setFoods(foods.filter((food) => food.id !== id));
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this kuliner?")) {
+            try {
+                const response = await fetch(`http://localhost:5555/kuliner/${id}`, {
+                    method: "DELETE",
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to delete kuliner: ${response.statusText}`);
+                }
+                setFoods(foods.filter((food) => food.id !== id));
+            } catch (error) {
+                alert(error.message || "Failed to delete kuliner");
+            }
         }
     };
 

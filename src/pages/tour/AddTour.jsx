@@ -10,7 +10,7 @@ const AddTour = () => {
 
     // Form state
     const [title, setTitle] = useState("");
-    const [price, setPrice] = useState("");
+    const [price, setPrice] = useState(null);
     const [tag, setTag] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState("");
@@ -40,7 +40,7 @@ const AddTour = () => {
         try {
             const formData = new FormData();
             formData.append("name", title);
-            formData.append("harga", price);
+            formData.append("harga", +price);
             formData.append("content", content);
             formData.append("image", imageFile);
             formData.append("tag", tag);

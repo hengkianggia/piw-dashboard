@@ -32,12 +32,12 @@ const TourDetail = () => {
                     credentials: "include",
                 });
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch blog: ${response.statusText}`);
+                    throw new Error(`Failed to fetch tour: ${response.statusText}`);
                 }
                 const data = await response.json();
                 setTour(data?.data || data);
             } catch (err) {
-                setError(err.message || "Failed to fetch blog");
+                setError(err.message || "Failed to fetch tour");
             } finally {
                 setLoading(false);
             }

@@ -59,8 +59,8 @@ const AddBlog = () => {
             setLoading(false);
             navigate("/blogs");
         } catch (err) {
-            setLoading(false);
             setError(err.message || "Failed to submit blog");
+            setLoading(false);
         }
     };
 

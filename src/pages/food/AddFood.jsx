@@ -10,7 +10,7 @@ const AddFood = () => {
 
     // Form state
     const [title, setTitle] = useState("");
-    const [price, setPrice] = useState("");
+    const [price, setPrice] = useState(null);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState("");
