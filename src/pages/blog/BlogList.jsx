@@ -17,6 +17,7 @@ import {
     ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const BlogList = () => {
     const navigate = useNavigate();
@@ -115,7 +116,9 @@ const BlogList = () => {
                                                 sx={{
                                                     height: "100%",
                                                     minHeight: 200,
-                                                    backgroundImage: `url(http://localhost:5555/uploads/${blog.image})`,
+                                                    backgroundImage: `url(${generateImageUrl(
+                                                        blog.image
+                                                    )})`,
                                                     backgroundSize: "cover",
                                                     backgroundPosition: "center",
                                                 }}

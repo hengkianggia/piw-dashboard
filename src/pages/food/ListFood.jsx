@@ -11,13 +11,16 @@ import {
     Paper,
     CircularProgress,
 } from "@mui/material";
+
 import {
     Add as AddIcon,
     Visibility as VisibilityIcon,
     Edit as EditIcon,
     Delete as DeleteIcon,
 } from "@mui/icons-material";
+
 import { useNavigate } from "react-router-dom";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const ListFood = () => {
     const navigate = useNavigate();
@@ -120,7 +123,7 @@ const ListFood = () => {
                                 <Box
                                     sx={{
                                         height: 200,
-                                        backgroundImage: `url(${food.image})`,
+                                        backgroundImage: `url(${generateImageUrl(food.image)})`,
                                         backgroundSize: "cover",
                                         backgroundPosition: "center",
                                     }}
@@ -134,7 +137,7 @@ const ListFood = () => {
                                         }}
                                     >
                                         <Typography variant="h6" component="h2" gutterBottom>
-                                            {food.title}
+                                            {food.name}
                                         </Typography>
                                         <Box>
                                             <Tooltip title="View">
@@ -174,7 +177,7 @@ const ListFood = () => {
                                         color="text.secondary"
                                         sx={{ mb: 2 }}
                                     >
-                                        Price: ${food.price}
+                                        Price: Rp.{food.harga}
                                     </Typography>
 
                                     <Typography
@@ -182,9 +185,9 @@ const ListFood = () => {
                                         color="text.secondary"
                                         sx={{ mt: 2, minHeight: "4em" }}
                                     >
-                                        {food.description.length > 100
-                                            ? `${food.description.substring(0, 100)}...`
-                                            : food.description}
+                                        {food.content.length > 100
+                                            ? `${food.content.substring(0, 100)}...`
+                                            : food.content}
                                     </Typography>
                                 </CardContent>
                             </Card>

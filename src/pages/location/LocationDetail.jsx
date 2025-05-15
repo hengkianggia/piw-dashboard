@@ -7,6 +7,7 @@ import {
     Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { mockLocations } from "../../utils/mockData";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const LocationDetail = () => {
     const { id } = useParams();
@@ -147,7 +148,7 @@ const LocationDetail = () => {
                 <Box
                     sx={{
                         height: 300,
-                        backgroundImage: `url(${location.image})`,
+                        backgroundImage: `url(${generateImageUrl(location.image)})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                     }}

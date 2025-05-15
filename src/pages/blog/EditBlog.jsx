@@ -11,6 +11,7 @@ import {
     Alert,
 } from "@mui/material";
 import { Save as SaveIcon, ArrowBack as ArrowBackIcon } from "@mui/icons-material";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const EditBlog = () => {
     const { id } = useParams();
@@ -38,7 +39,7 @@ const EditBlog = () => {
                 const data = await response.json();
                 setTitle(data?.data?.name || "");
                 setDescription(data?.data?.content || "");
-                setImagePreview(`http://localhost:5555/upload/${data.image}`);
+                setImagePreview(generateImageUrl(data?.data?.image));
             } catch (err) {
                 setError(err.message || "Failed to fetch blog");
             } finally {
@@ -76,7 +77,7 @@ const EditBlog = () => {
             formData.append("name", title);
             formData.append("content", description);
             if (imageFile) {
-                formData.append("image", imageFile);
+                formData.append("file", imageFile);
             }
 
             const response = await fetch(`http://localhost:5555/berita/${id}`, {

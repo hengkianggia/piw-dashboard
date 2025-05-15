@@ -6,6 +6,7 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon,
 } from "@mui/icons-material";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const BlogDetail = () => {
     const { id } = useParams();
@@ -146,7 +147,7 @@ const BlogDetail = () => {
                 <Box
                     sx={{
                         height: 300,
-                        backgroundImage: `url(http://localhost:5555/upload/${blog.image})`,
+                        backgroundImage: `url(${generateImageUrl(blog.image)})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                     }}

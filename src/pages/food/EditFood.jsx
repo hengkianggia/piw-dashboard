@@ -29,13 +29,28 @@ const EditFood = () => {
 
     useEffect(() => {
         // Fetch food data
-        const food = mockFoods.find((food) => food.id === id);
-        if (food) {
-            setTitle(food.title);
-            setPrice(food.price);
-            setDescription(food.description);
-            setImagePreview(food.image);
-        }
+        const fetchKuliner = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`http://localhost:5555/kuliner/${id}`, {
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch kuliner: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setTitle(data?.data?.name || "");
+                setDescription(data?.data?.content || "");
+                setImagePreview(`http://localhost:5555/upload/${data.image}`);
+                setPrice(data?.data?.harga || "");
+            } catch (err) {
+                setError(err.message || "Failed to fetch kuliner");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchKuliner();
     }, [id]);
 
     // Handle image file change
@@ -61,12 +76,28 @@ const EditFood = () => {
         setSuccess("");
 
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            setSuccess("Food updated successfully");
+            const formData = new FormData();
+            formData.append("name", title);
+            formData.append("content", description);
+            formData.append("harga", price);
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+
+            const response = await fetch(`http://localhost:5555/kuliner/${id}`, {
+                method: "PUT",
+                body: formData,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update Kuliner: ${response.statusText}`);
+            }
+
+            setSuccess("Kuliner updated successfully");
             setTimeout(() => navigate("/food"), 1000);
         } catch (err) {
-            setError("Failed to update food");
+            setError(err.message || "Failed to update kuliner");
         } finally {
             setLoading(false);
         }

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { Save as SaveIcon, ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import { mockLocations } from "../../utils/mockData";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const EditLocation = () => {
     const { id } = useParams();
@@ -39,7 +40,7 @@ const EditLocation = () => {
                 const data = await response.json();
                 setName(data?.data?.name || "");
                 setDescription(data?.data?.content || "");
-                setImagePreview(`http://localhost:5555/upload/${data.image}`);
+                setImagePreview(generateImageUrl(data?.data?.image));
             } catch (err) {
                 setError(err.message || "Failed to fetch blog");
             } finally {

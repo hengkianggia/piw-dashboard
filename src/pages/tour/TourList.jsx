@@ -20,6 +20,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { mockTours } from "../../utils/mockData";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const TourList = () => {
     const navigate = useNavigate();
@@ -121,7 +122,7 @@ const TourList = () => {
                                 <Box
                                     sx={{
                                         height: 200,
-                                        backgroundImage: `url(${tour.image})`,
+                                        backgroundImage: `url(${generateImageUrl(tour.image)})`,
                                         backgroundSize: "cover",
                                         backgroundPosition: "center",
                                     }}
@@ -135,7 +136,7 @@ const TourList = () => {
                                         }}
                                     >
                                         <Typography variant="h6" component="h2" gutterBottom>
-                                            {tour.title}
+                                            {tour.name}
                                         </Typography>
                                         <Box>
                                             <Tooltip title="View">
@@ -175,19 +176,11 @@ const TourList = () => {
                                         color="text.secondary"
                                         sx={{ mb: 2 }}
                                     >
-                                        Price: ${tour.price}
+                                        Price: Rp. {tour.harga}
                                     </Typography>
 
                                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                                        {tour.tags &&
-                                            tour.tags.map((tag) => (
-                                                <Chip
-                                                    key={tag}
-                                                    label={tag}
-                                                    color="primary"
-                                                    variant="outlined"
-                                                />
-                                            ))}
+                                        Tag : {tour.tag}
                                     </Box>
 
                                     <Typography
@@ -195,9 +188,9 @@ const TourList = () => {
                                         color="text.secondary"
                                         sx={{ mt: 2, minHeight: "4em" }}
                                     >
-                                        {tour.description.length > 100
-                                            ? `${tour.description.substring(0, 100)}...`
-                                            : tour.description}
+                                        {tour.content.length > 100
+                                            ? `${tour.content.substring(0, 100)}...`
+                                            : tour.content}
                                     </Typography>
                                 </CardContent>
                             </Card>

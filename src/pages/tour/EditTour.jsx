@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Save as SaveIcon, ArrowBack as ArrowBackIcon, Add as AddIcon } from "@mui/icons-material";
 import { mockTours } from "../../utils/mockData";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const EditTour = () => {
     const { id } = useParams();
@@ -24,7 +25,6 @@ const EditTour = () => {
     // Form state
     const [title, setTitle] = useState("");
     const [price, setPrice] = useState("");
-    const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState("");
@@ -44,9 +44,9 @@ const EditTour = () => {
                 const data = await response.json();
                 setTitle(data?.data?.name || "");
                 setPrice(data?.data?.harga || "");
-                setDescription(data?.data?.content || "");
+                setContent(data?.data?.content || "");
                 setTagInput(data?.data?.tag || "");
-                setImagePreview(`http://localhost:5555/upload/${data.image}`);
+                setImagePreview(generateImageUrl(data?.data?.image));
             } catch (err) {
                 setError(err.message || "Failed to fetch blog");
             } finally {
@@ -56,20 +56,6 @@ const EditTour = () => {
 
         fetchTour();
     }, [id]);
-
-    // Handle tag addition
-    const handleAddTag = () => {
-        const newTag = tagInput.trim();
-        if (newTag && !tags.includes(newTag)) {
-            setTags([...tags, newTag]);
-            setTagInput("");
-        }
-    };
-
-    // Handle tag deletion
-    const handleDeleteTag = (tagToDelete) => {
-        setTags(tags.filter((tag) => tag !== tagToDelete));
-    };
 
     // Handle image file change
     const handleImageChange = (e) => {
@@ -84,7 +70,7 @@ const EditTour = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!title || !price || tags.length === 0 || (!imageFile && !imagePreview) || !content) {
+        if (!title || !price || !tagInput || (!imageFile && !imagePreview) || !content) {
             setError("Please fill out all required fields");
             return;
         }
@@ -94,12 +80,29 @@ const EditTour = () => {
         setSuccess("");
 
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            setSuccess("Tour updated successfully");
+            const formData = new FormData();
+            formData.append("name", title);
+            formData.append("content", content);
+            formData.append("harga", price);
+            formData.append("tag", tagInput);
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+
+            const response = await fetch(`http://localhost:5555/rekreasi/${id}`, {
+                method: "PUT",
+                body: formData,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update Kuliner: ${response.statusText}`);
+            }
+
+            setSuccess("Kuliner updated successfully");
             setTimeout(() => navigate("/tours"), 1000);
         } catch (err) {
-            setError("Failed to update tour");
+            setError(err.message || "Failed to update kuliner");
         } finally {
             setLoading(false);
         }
@@ -167,38 +170,13 @@ const EditTour = () => {
 
                         <Grid item xs={12}>
                             <TextField
+                                required
                                 fullWidth
-                                label="Add Tag"
+                                label="Tour Tag"
                                 value={tagInput}
                                 onChange={(e) => setTagInput(e.target.value)}
-                                onKeyPress={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.preventDefault();
-                                        handleAddTag();
-                                    }
-                                }}
                                 variant="outlined"
-                                InputProps={{
-                                    endAdornment: (
-                                        <Button onClick={handleAddTag} startIcon={<AddIcon />}>
-                                            Add
-                                        </Button>
-                                    ),
-                                }}
-                                helperText="Press Enter or click Add to add a tag"
                             />
-                            <Box sx={{ display: "flex", flexWrap: "wrap", mt: 1 }}>
-                                {tags.map((tag) => (
-                                    <Chip
-                                        key={tag}
-                                        label={tag}
-                                        onDelete={() => handleDeleteTag(tag)}
-                                        color="primary"
-                                        variant="outlined"
-                                        sx={{ mr: 0.5, mb: 0.5 }}
-                                    />
-                                ))}
-                            </Box>
                         </Grid>
 
                         <Grid item xs={12}>

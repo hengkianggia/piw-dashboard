@@ -23,23 +23,41 @@ const DetailFood = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate API call
-        setLoading(true);
-        setTimeout(() => {
-            const foundFood = mockFoods.find((food) => food.id === id);
-            if (foundFood) {
-                setFood(foundFood);
+        const fetchBlog = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`http://localhost:5555/kuliner/${id}`, {
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch kuliner: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setFood(data?.data || data);
+            } catch (err) {
+                setError(err.message || "Failed to fetch kuliner");
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        }, 800);
+        };
+
+        fetchBlog();
     }, [id]);
 
-    const handleDelete = () => {
-        if (window.confirm("Are you sure you want to delete this food item?")) {
-            // Simulate deletion
-            setTimeout(() => {
+    const handleDelete = async () => {
+        if (window.confirm("Are you sure you want to delete this kuliner?")) {
+            try {
+                const response = await fetch(`http://localhost:5555/kuliner/${id}`, {
+                    method: "DELETE",
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to delete kuliner: ${response.statusText}`);
+                }
                 navigate("/food");
-            }, 500);
+            } catch (error) {
+                setError(err.message || "Failed to delete kuliner");
+            }
         }
     };
 
@@ -133,13 +151,13 @@ const DetailFood = () => {
 
                 <Box sx={{ p: 4 }}>
                     <Typography variant="h5" gutterBottom>
-                        {food.title}
+                        {food.name}
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2 }}>
-                        Price: ${food.price}
+                        Price: Rp. {food.harga}
                     </Typography>
                     <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
-                        {food.description}
+                        {food.content}
                     </Typography>
                 </Box>
             </Paper>

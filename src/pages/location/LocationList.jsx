@@ -18,6 +18,7 @@ import {
     Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const LocationList = () => {
     const navigate = useNavigate();
@@ -120,7 +121,7 @@ const LocationList = () => {
                                 <Box
                                     sx={{
                                         height: 200,
-                                        backgroundImage: `url(http://localhost:5555/uploads/${location.image})`,
+                                        backgroundImage: `url(${generateImageUrl(location.image)})`,
                                         backgroundSize: "cover",
                                         backgroundPosition: "center",
                                     }}

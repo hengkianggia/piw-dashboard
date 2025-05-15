@@ -100,17 +100,11 @@ const SignIn = () => {
                 {loading ? <CircularProgress size={24} /> : "Sign In"}
             </Button>
 
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {/* <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Link component={RouterLink} to="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                 </Link>
-            </Box>
-
-            <Box sx={{ mt: 3, bgcolor: "background.default", p: 2, borderRadius: 1 }}>
-                <Typography variant="caption" display="block" gutterBottom align="center">
-                    Demo credentials: admin@example.com / password
-                </Typography>
-            </Box>
+            </Box> */}
         </Box>
     );
 };

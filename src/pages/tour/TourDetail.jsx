@@ -16,11 +16,12 @@ import {
     ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import { mockTours } from "../../utils/mockData";
+import { generateImageUrl } from "../../utils/generateUrlImage";
 
 const TourDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [tour, setTour] = useState(null);
+    const [tour, setTour] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -35,7 +36,7 @@ const TourDetail = () => {
                     throw new Error(`Failed to fetch tour: ${response.statusText}`);
                 }
                 const data = await response.json();
-                setTour(data?.data || data);
+                setTour(data?.data || []);
             } catch (err) {
                 setError(err.message || "Failed to fetch tour");
             } finally {
@@ -163,7 +164,7 @@ const TourDetail = () => {
                 <Box
                     sx={{
                         height: 300,
-                        backgroundImage: `url(${tour.image})`,
+                        backgroundImage: `url(${generateImageUrl(tour.image)})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                     }}
@@ -171,19 +172,16 @@ const TourDetail = () => {
 
                 <Box sx={{ p: 4 }}>
                     <Typography variant="h5" gutterBottom>
-                        {tour.title}
+                        {tour.name}
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2 }}>
-                        Price: ${tour.price}
+                        Price: Rp. {tour.harga}
                     </Typography>
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-                        {tour.tags &&
-                            tour.tags.map((tag) => (
-                                <Chip key={tag} label={tag} color="primary" variant="outlined" />
-                            ))}
+                        Tag : {tour.tag}
                     </Box>
                     <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
-                        {tour.description}
+                        {tour.content}
                     </Typography>
                 </Box>
             </Paper>
